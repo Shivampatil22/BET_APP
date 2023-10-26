@@ -1,13 +1,15 @@
 import './App.css'
-import CreateBet from './pages/CreateBet'
+
 
 function App() {
  
 
   return (
     <>
-      <CreateBet />
-      <div></div>
+
+      <div className='w-screen h-screen flex justify-center items-center'>
+  
+       </div>
     </>
   )
 }
