@@ -1,13 +1,13 @@
-
 import './App.css'
+import CreateBet from './pages/CreateBet'
 
 function App() {
  
 
   return (
     <>
-      <div>
-       </div>
+      <CreateBet />
+      <div></div>
     </>
   )
 }
