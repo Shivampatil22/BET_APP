@@ -31,7 +31,7 @@ const DetailsCard = ({
         </span>
         <span className="flex flex-col mx-3 text-white">
           <span className="text-lg font-semibold">Response</span>
-          <span className="text-lg font-light">{receiver}</span>
+          <span className="text-lg font-light">{receiverResp}</span>
         </span>
       </div>
 
