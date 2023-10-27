@@ -68,7 +68,7 @@ const SiginUp = () => {
            
             const {auth,user}=data.data
              localStorage.setItem("token",auth);
-             localStorage.setItem("user",user.phone)
+             localStorage.setItem("user",user._id)
              navigate("/home");
         }
         else{
