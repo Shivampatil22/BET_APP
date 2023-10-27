@@ -20,8 +20,8 @@ const CreateBet = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-xl">
+    
+      <div className="w-full max-w-md p-8 m-4 bg-white rounded-lg shadow-xl">
         <h1 className="text-3xl font-semibold mb-4">Initiate Bet</h1>
         <div className="mb-4 ">
           <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="initName">
@@ -175,7 +175,7 @@ const CreateBet = () => {
           Initiate Bet
         </button>
       </div>
-    </div>
+ 
   );
 };
 
