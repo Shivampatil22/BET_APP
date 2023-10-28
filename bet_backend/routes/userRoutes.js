@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {Verifytoken}=require("../middlerware");
-const {Signup,Login}=require("../tasks/UserFunctions")
+const {Signup,Login}=require("../task/UserFunctions")
 
 // api to post data from signup form
 router.post("/register", Signup);

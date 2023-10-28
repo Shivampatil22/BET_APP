@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bycrpt = require("bcrypt");
 const jwt_key = "bets";
-const User=require("../models/userModel");
+const User=require("../model/userModel");
 
 
 const Signup = async (req, resp) => {

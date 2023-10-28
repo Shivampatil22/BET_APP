@@ -303,6 +303,7 @@ const CreateBet = () => {
           Initiate Bet
         </button>
       </div>
+    </div>
   );
 };
 
