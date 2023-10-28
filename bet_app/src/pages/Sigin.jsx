@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 const SiginUp = () => {
   const [NameErr, setNameErr] = useState(false);
@@ -11,7 +11,7 @@ const SiginUp = () => {
   const name = useRef();
   const phone = useRef();
   const pass = useRef();
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const validatephone = (phone) => {
     return String(phone)
@@ -19,9 +19,9 @@ const SiginUp = () => {
       .match(/^(?:\+\d{1,3})?\d{10}$/);
   };
   const log = () => {
-    // navigate("/login");
+    navigate("/login");
   };
-  const handleRegister = (e) => {
+  const handleRegister = async(e) => {
     const Name = name.current.value;
     const Phone = phone.current.value;
     const Pass = pass.current.value;
@@ -59,13 +59,27 @@ const SiginUp = () => {
       }
     }
     if (a + b + c === 3) {
-      alert("regis");
-     
+        const data = await axios.post("http://localhost:5500/register",{
+            name:Name,
+            phone:Phone,
+            password:Pass
+        });
+        if(data){
+           
+            const {auth,user}=data.data
+             localStorage.setItem("token",auth);
+             localStorage.setItem("user",user._id)
+             navigate("/home");
+        }
+        else{
+            alert("Something went wrong")
+        }
+   
     }
 
   };
   return (
-    <div className="w-full h-full flex justify-center items-center bily">
+    <div className="w-full h-screen flex justify-center items-center bg-slate-950">
       <div className="flex flex-col z-10 bg-[#151515] sm:rounded-lg p-5 sm:px-10 px-7 items-start sm:w-max w-full sm:h-max h-full ">
         <div className="text-slate-50 font-semibold text-[1.7rem] mt-1 flex w-full ">
           Create a free account!
@@ -125,7 +139,7 @@ const SiginUp = () => {
         </div>
         <div className="flex w-full items-center justify-center mt-7 mb-5">
           <button
-            className="text-xl bg-slate-50 text-slate-900 px-4 py-2 font-semibold rounded-lg w-full "
+            className="text-xl bg-slate-50 text-slate-900 px-4 py-2 font-semibold rounded-lg w-full active:scale-105 duration-200 "
             onClick={() => {
               handleRegister();
             }}
@@ -136,7 +150,7 @@ const SiginUp = () => {
         <div className="text-slate-50">
           Already have an account?
           <span
-            className="font-bold"
+            className="font-bold cursor-pointer"
             onClick={() => {
               log();
             }}

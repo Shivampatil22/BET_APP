@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require("cors");
+const UserRouter =require("./routes/userRoutes")
 require("dotenv").config();
 const router = require('./routes/betRoutes');
 
@@ -11,7 +12,11 @@ const router = require('./routes/betRoutes');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
 app.use(router);
+
+app.use(UserRouter);
+
 
 
 
