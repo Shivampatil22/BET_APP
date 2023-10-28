@@ -9,12 +9,12 @@ import ReqestBetList from './components/ReqestBetList'
 import WinList from './components/WinList'
 import LoseList from './components/LoseList'
 import History from './components/History'
+
 function App() {
  
 
   return (
     <>
-
       <div className='flex justify-center items-center'>
           <BrowserRouter>
           <Routes>
@@ -31,6 +31,7 @@ function App() {
           </Routes>
           </BrowserRouter>
        </div>
+
     </>
   )
 }
