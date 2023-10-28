@@ -79,7 +79,7 @@ const SiginUp = () => {
 
   };
   return (
-    <div className="w-full h-screen flex justify-center items-center bily">
+    <div className="w-full h-screen flex justify-center items-center bg-slate-950">
       <div className="flex flex-col z-10 bg-[#151515] sm:rounded-lg p-5 sm:px-10 px-7 items-start sm:w-max w-full sm:h-max h-full ">
         <div className="text-slate-50 font-semibold text-[1.7rem] mt-1 flex w-full ">
           Create a free account!

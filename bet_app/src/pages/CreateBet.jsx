@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Nav from '../components/Nav';
+import { useNavigate } from 'react-router-dom';
 
 const CreateBet = () => {
   const [initName, setInitName] = useState('');
@@ -8,9 +10,9 @@ const CreateBet = () => {
   const [criteria, setCriteria] = useState('');
   const [resolDate, setResolDate] = useState('');
   const [wager, setWager] = useState('');
-
+  
   const [error, setError] = useState(false);
-
+  const navigate = useNavigate();
   const initiateBet = async () => {
     if (!initName || !initResponse || !counterName || !counterResponse || !criteria || !resolDate || !wager) {
       setError(true);
@@ -19,12 +21,23 @@ const CreateBet = () => {
     console.warn(initName, initResponse, counterName, counterResponse, criteria, resolDate, wager);
   };
 
-  return (
     
+      useEffect(() => {
+        if (!localStorage.getItem("token")) {
+          navigate("/");
+        }
+      }, []);
+
+  return (
+    <div className='w-screen h-full flex justify-center bg-slate-950 flex-col items-center'>
+      <Nav username={"Shivam"}/>
       <div className="w-full max-w-md p-8 m-4 bg-white rounded-lg shadow-xl">
         <h1 className="text-3xl font-semibold mb-4">Initiate Bet</h1>
         <div className="mb-4 ">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="initName">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            htmlFor="initName"
+          >
             Initiator Name
           </label>
           <input
@@ -35,14 +48,18 @@ const CreateBet = () => {
             value={initName}
             onChange={(e) => setInitName(e.target.value)}
           />
-          {error && !initName && <span className="text-red-500 text-left">Enter a valid name</span>}
+          {error && !initName && (
+            <span className="text-red-500 text-left">Enter a valid name</span>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
             Initiator Response
           </label>
-          <div className="flex items-start"> {/* Align options to the left */}
+          <div className="flex items-start">
+            {" "}
+            {/* Align options to the left */}
             <div className="mr-2">
               <label>
                 <input
@@ -51,7 +68,7 @@ const CreateBet = () => {
                   value="Option 1"
                   checked={initResponse === "YES"}
                   onChange={() => setInitResponse("YES")}
-                  className='mr-1'
+                  className="mr-1"
                 />
                 YES
               </label>
@@ -64,17 +81,22 @@ const CreateBet = () => {
                   value="Option 2"
                   checked={initResponse === "NO"}
                   onChange={() => setInitResponse("NO")}
-                  className='ml-3 mr-1'
+                  className="ml-3 mr-1"
                 />
                 NO
               </label>
             </div>
           </div>
-          {error && !initResponse && <span className="text-red-500 text-left">Select a response</span>}
+          {error && !initResponse && (
+            <span className="text-red-500 text-left">Select a response</span>
+          )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="counterName">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            htmlFor="counterName"
+          >
             Counterparty Name
           </label>
           <input
@@ -85,14 +107,18 @@ const CreateBet = () => {
             value={counterName}
             onChange={(e) => setCounterName(e.target.value)}
           />
-          {error && !counterName && <span className="text-red-500 text-left">Enter a valid name</span>}
+          {error && !counterName && (
+            <span className="text-red-500 text-left">Enter a valid name</span>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
             Counterparty Response
           </label>
-          <div className="flex items-start"> {/* Align options to the left */}
+          <div className="flex items-start">
+            {" "}
+            {/* Align options to the left */}
             <div className="mr-2">
               <label>
                 <input
@@ -101,7 +127,7 @@ const CreateBet = () => {
                   value="Option A"
                   checked={counterResponse === "YES"}
                   onChange={() => setCounterResponse("YES")}
-                  className='mr-1'
+                  className="mr-1"
                 />
                 YES
               </label>
@@ -114,17 +140,22 @@ const CreateBet = () => {
                   value="Option B"
                   checked={counterResponse === "NO"}
                   onChange={() => setCounterResponse("NO")}
-                  className='ml-3 mr-1'
+                  className="ml-3 mr-1"
                 />
                 NO
               </label>
             </div>
           </div>
-          {error && !counterResponse && <span className="text-red-500 text-left">Select a response</span>}
+          {error && !counterResponse && (
+            <span className="text-red-500 text-left">Select a response</span>
+          )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="criteria">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            htmlFor="criteria"
+          >
             Criteria
           </label>
           <textarea
@@ -135,11 +166,16 @@ const CreateBet = () => {
             value={criteria}
             onChange={(e) => setCriteria(e.target.value)}
           />
-          {error && !criteria && <span className="text-red-500 text-left">Enter valid criteria</span>}
+          {error && !criteria && (
+            <span className="text-red-500 text-left">Enter valid criteria</span>
+          )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="resolDate">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            htmlFor="resolDate"
+          >
             Resolution Date
           </label>
           <input
@@ -150,11 +186,16 @@ const CreateBet = () => {
             value={resolDate}
             onChange={(e) => setResolDate(e.target.value)}
           />
-          {error && !resolDate && <span className="text-red-500 text-left">Enter a valid date</span>}
+          {error && !resolDate && (
+            <span className="text-red-500 text-left">Enter a valid date</span>
+          )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="wager">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            htmlFor="wager"
+          >
             Wager
           </label>
           <input
@@ -165,7 +206,9 @@ const CreateBet = () => {
             value={wager}
             onChange={(e) => setWager(e.target.value)}
           />
-          {error && !wager && <span className="text-red-500 text-left">Enter a valid wager</span>}
+          {error && !wager && (
+            <span className="text-red-500 text-left">Enter a valid wager</span>
+          )}
         </div>
 
         <button
@@ -175,7 +218,7 @@ const CreateBet = () => {
           Initiate Bet
         </button>
       </div>
- 
+    </div>
   );
 };
 
