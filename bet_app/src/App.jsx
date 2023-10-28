@@ -1,4 +1,5 @@
 import './App.css'
+import CreateBet from './pages/CreateBet'
 
 
 function App() {
@@ -7,9 +8,9 @@ function App() {
   return (
     <>
 
-      <div className='w-screen h-screen flex justify-center items-center'>
-  
-       </div>
+      <div className='w-screen flex justify-center items-center'>
+        <CreateBet />
+      </div>
     </>
   )
 }

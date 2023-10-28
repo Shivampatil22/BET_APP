@@ -1,56 +1,115 @@
 import React, { useState } from 'react';
+import Axios from 'axios';
 
 const CreateBet = () => {
-  const [initName, setInitName] = useState('');
-  const [initResponse, setInitResponse] = useState('');
-  const [counterName, setCounterName] = useState('');
-  const [counterResponse, setCounterResponse] = useState('');
+  const [senderName, setSenderName] = useState('');
+  const [senderResponse, setSenderResponse] = useState('');
+  const [senderNumber, setNumber] = useState(12345);
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverResponse, setReceiverResponse] = useState('');
+  const [receiverNumber, setReceiverNumber] = useState();
   const [criteria, setCriteria] = useState('');
   const [resolDate, setResolDate] = useState('');
   const [wager, setWager] = useState('');
+  const [status, setStatus] = useState('pending');
+  const [senderFinalResp, setSenderFinalResp] = useState('NIL');
+  const [receiverFinalResp, setReceiverFinalResp] = useState('NIL');
 
   const [error, setError] = useState(false);
+  
+  
+
+  const sendResp = async () => {
+    try {
+      const response = await Axios.post(`http://localhost:5500/api/sendmessage`);
+      
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
 
   const initiateBet = async () => {
-    if (!initName || !initResponse || !counterName || !counterResponse || !criteria || !resolDate || !wager) {
+    if (!senderName || !senderResponse || !senderNumber || !receiverName || !receiverResponse || !receiverNumber || !criteria || !resolDate || !wager) {
       setError(true);
+      return false; //Empty values provided
+    }
+
+    if (isNaN(receiverNumber)) {
+      setError(true);
+      return false; // ReceiverNumber is not a valid number
+    }    
+
+    if((senderResponse==="YES" && receiverResponse==="YES") || (senderResponse==="NO" && receiverResponse==="NO")){
+      alert('Responses of both entities cannot be same');
       return false;
     }
-    console.warn(initName, initResponse, counterName, counterResponse, criteria, resolDate, wager);
+  
+    const betData = {
+      senderName,
+      senderResponse,
+      senderNumber,
+      receiverName,
+      receiverResponse,
+      receiverNumber,
+      criteria,
+      resolDate,
+      wager,
+      status,
+      senderFinalResp,
+      receiverFinalResp,
+    };
+
+    try {
+      const response = await Axios.post('http://localhost:5500/api/createbet', betData);
+
+      if (response.status === 200) {
+    //calling the send response api after posting new bet to get the bet confirmation from the counterparty.
+        sendResp();
+        console.log('Bet created successfully', response.data);
+      } else {
+        console.error('Error creating bet', response.status, response.data);
+      }
+    } catch (error) {
+      console.error('An error occurred while creating the bet', error);
+    }
+    
+    
+
+    console.warn(senderName, senderResponse, senderNumber, receiverName, receiverResponse, receiverNumber, criteria, resolDate, wager, status);
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-xl">
         <h1 className="text-3xl font-semibold mb-4">Initiate Bet</h1>
         <div className="mb-4 ">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="initName">
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="senderName">
             Initiator Name
           </label>
           <input
             type="text"
-            id="initName"
+            id="senderName"
             placeholder="Enter initiator's name"
             className="border border-gray-300 rounded-md p-2 w-full"
-            value={initName}
-            onChange={(e) => setInitName(e.target.value)}
+            value={senderName}
+            onChange={(e) => setSenderName(e.target.value)}
           />
-          {error && !initName && <span className="text-red-500 text-left">Enter a valid name</span>}
+          {error && !senderName && <span className="text-red-500 text-left">Enter a valid name</span>}
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
             Initiator Response
           </label>
-          <div className="flex items-start"> {/* Align options to the left */}
+          <div className="flex items-start"> 
             <div className="mr-2">
               <label>
                 <input
                   type="radio"
-                  name="initResponse"
+                  name="senderResponse"
                   value="Option 1"
-                  checked={initResponse === "YES"}
-                  onChange={() => setInitResponse("YES")}
+                  checked={senderResponse === "YES"}
+                  onChange={() => setSenderResponse("YES")}
                   className='mr-1'
                 />
                 YES
@@ -60,32 +119,32 @@ const CreateBet = () => {
               <label>
                 <input
                   type="radio"
-                  name="initResponse"
+                  name="senderResponse"
                   value="Option 2"
-                  checked={initResponse === "NO"}
-                  onChange={() => setInitResponse("NO")}
+                  checked={senderResponse === "NO"}
+                  onChange={() => setSenderResponse("NO")}
                   className='ml-3 mr-1'
                 />
                 NO
               </label>
             </div>
           </div>
-          {error && !initResponse && <span className="text-red-500 text-left">Select a response</span>}
+          {error && !senderResponse && <span className="text-red-500 text-left">Select a response</span>}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="counterName">
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="receiverName">
             Counterparty Name
           </label>
           <input
             type="text"
-            id="counterName"
+            id="receiverName"
             placeholder="Enter counterparty's name"
             className="border border-gray-300 rounded-md p-2 w-full"
-            value={counterName}
-            onChange={(e) => setCounterName(e.target.value)}
+            value={receiverName}
+            onChange={(e) => setReceiverName(e.target.value)}
           />
-          {error && !counterName && <span className="text-red-500 text-left">Enter a valid name</span>}
+          {error && !receiverName && <span className="text-red-500 text-left">Enter a valid name</span>}
         </div>
 
         <div className="mb-4">
@@ -97,10 +156,10 @@ const CreateBet = () => {
               <label>
                 <input
                   type="radio"
-                  name="counterResponse"
+                  name="receiverResponse"
                   value="Option A"
-                  checked={counterResponse === "YES"}
-                  onChange={() => setCounterResponse("YES")}
+                  checked={receiverResponse === "YES"}
+                  onChange={() => setReceiverResponse("YES")}
                   className='mr-1'
                 />
                 YES
@@ -110,17 +169,32 @@ const CreateBet = () => {
               <label>
                 <input
                   type="radio"
-                  name="counterResponse"
+                  name="receiverResponse"
                   value="Option B"
-                  checked={counterResponse === "NO"}
-                  onChange={() => setCounterResponse("NO")}
+                  checked={receiverResponse === "NO"}
+                  onChange={() => setReceiverResponse("NO")}
                   className='ml-3 mr-1'
                 />
                 NO
               </label>
             </div>
           </div>
-          {error && !counterResponse && <span className="text-red-500 text-left">Select a response</span>}
+          {error && !receiverResponse && <span className="text-red-500 text-left">Select a response</span>}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2 text-left" htmlFor="wager">
+            Counterparty Phone Number
+          </label>
+          <input
+            type="text"
+            id="receiverNumber"
+            placeholder="Enter Counterparty Number"
+            className="border border-gray-300 rounded-md p-2 w-full"
+            value={receiverNumber}
+            onChange={(e) => setReceiverNumber(e.target.value)}
+          />
+          {error && (!receiverNumber || (isNaN(receiverNumber)) ) && <span className="text-red-500 text-left">Enter a valid Phone number</span>}
         </div>
 
         <div className="mb-4">
@@ -143,14 +217,14 @@ const CreateBet = () => {
             Resolution Date
           </label>
           <input
-            type="date"
+            type="datetime-local"
             id="resolDate"
             placeholder="Enter resolution date"
             className="border border-gray-300 rounded-md p-2 w-full"
             value={resolDate}
             onChange={(e) => setResolDate(e.target.value)}
           />
-          {error && !resolDate && <span className="text-red-500 text-left">Enter a valid date</span>}
+          {error && (!resolDate) && <span className="text-red-500 text-left">Enter a valid date</span>}
         </div>
 
         <div className="mb-4">
@@ -175,7 +249,6 @@ const CreateBet = () => {
           Initiate Bet
         </button>
       </div>
-    </div>
   );
 };
 
