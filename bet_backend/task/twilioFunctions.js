@@ -13,7 +13,7 @@ const sendMessage = async (req, resp) => {
         messagingServiceSid: serviceId,
         body: `Hi there is a bet being placed, please click the link below to accept/decline the request `,
       });
-      
+      console.log("message sent");
       // Send a response to the API
       resp.status(200).json({ message: 'Message sent successfully', messageSid: message.sid });
     } catch (error) {

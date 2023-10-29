@@ -1,17 +1,22 @@
 import React from "react";
+import axios from "axios";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { RxCrossCircled } from "react-icons/rx";
 const DetailsCard = ({
+  Betid,
   sender,
   senderResp,
+  senderphone,
   receiver,
   receiverResp,
   description,
   ResolutionDate,
   Wager,
   status,
-  BetInvite,
-  BetResult,
+  DeleteBet,
+  AcceptBet,
+  FinalsenderResp,
+  FinalreceiverResp,
   Result,
 }) => {
   const normal =
@@ -20,6 +25,63 @@ const DetailsCard = ({
     "w-full lose flex items-start px-5 py-3 my-3 lg:flex-row flex-col justify-evenly";
   const win =
     "w-full win flex items-start px-5 py-3 my-3 lg:flex-row flex-col justify-evenly";
+
+  const phone = localStorage.getItem("phone");
+  const SendRespone = async (
+    senderPhone,
+    id,
+    resp,
+    senderResp,
+    receiverResp
+  ) => {
+    console.log(senderPhone);
+    let check = 0;
+    if (senderphone == phone) {
+      check = 1;
+    }
+    if (check == 1) {
+      if (receiverResp == "NIL") {
+        await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/1`, {
+          finalResp: resp,
+        });
+      } else {
+        if (receiverResp == resp) {
+          alert("Both participants have given same response");
+        } else {
+          await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/1`, {
+            finalResp: resp,
+          });
+          if (resp == "Yes") {
+            alert("Congratulation you won the bet");
+          }
+          await axios.patch(`http://localhost:5500/api/updatestatus/${id}`, {
+            status: "close",
+          });
+        }
+      }
+    } else {
+      if (senderResp == "NIL") {
+        await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/0`, {
+          finalResp: resp,
+        });
+      } else {
+        if (senderResp == resp) {
+          alert("Both participants have given same response");
+        } else {
+          await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/0`, {
+            finalResp: resp,
+          });
+          if (resp == "Yes") {
+            alert("Congratulation you won the bet");
+          }
+          await axios.patch(`http://localhost:5500/api/updatestatus/${id}`, {
+            status: "close",
+          });
+        }
+      }
+    }
+    alert("Your Respones is noted")
+  };
   return (
     <div
       className={
@@ -67,10 +129,20 @@ const DetailsCard = ({
       </div>
       {status == "pending" && (
         <div className="flex lg:flex-col  justify-evenly h-full mx-3 ">
-          <button className="text-[3rem] lg:mx-0 mx-4 text-green-600">
+          <button
+            className="text-[3rem] lg:mx-0 mx-4 text-green-600"
+            onClick={() => {
+              AcceptBet(Betid);
+            }}
+          >
             <AiOutlineCheckCircle />
           </button>
-          <button className="text-[3rem] text-red-600">
+          <button
+            className="text-[3rem] text-red-600"
+            onClick={() => {
+              DeleteBet(Betid);
+            }}
+          >
             <RxCrossCircled />
           </button>
         </div>
@@ -81,10 +153,32 @@ const DetailsCard = ({
             Was this Bet Result in your Favour?
           </div>
           <div className="flex justify-around my-3">
-            <button className="text-xl mx-3 bg-blue-600 text-white font-semibold py-1 px-2 rounded-md  ">
+            <button
+              className="text-xl mx-3 bg-blue-600 text-white font-semibold py-1 px-2 rounded-md  "
+              onClick={() => {
+                SendRespone(
+                  senderphone,
+                  Betid,
+                  "Yes",
+                  FinalsenderResp,
+                  FinalreceiverResp
+                );
+              }}
+            >
               YES
             </button>
-            <button className="text-xl bg-red-600 text-white font-semibold py-1 px-2 rounded-md  ">
+            <button
+              className="text-xl bg-red-600 text-white font-semibold py-1 px-2 rounded-md "
+              onClick={() => {
+                SendRespone(
+                  senderphone,
+                  Betid,
+                  "No",
+                  FinalsenderResp,
+                  FinalreceiverResp
+                );
+              }}
+            >
               NO
             </button>
           </div>

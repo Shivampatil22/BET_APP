@@ -57,4 +57,9 @@ const Login = async (req, resp) => {
 
 }
 
-module.exports={Signup,Login};
+const GetUser=async(req,res)=>{
+        const id=req.params.id;
+        let user=await User.findOne({_id:id});
+        res.send(user)
+}
+module.exports={Signup,Login,GetUser};

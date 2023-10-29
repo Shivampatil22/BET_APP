@@ -21,7 +21,7 @@ const SiginUp = () => {
   const log = () => {
     navigate("/login");
   };
-  const handleRegister = async(e) => {
+  const handleRegister = async (e) => {
     const Name = name.current.value;
     const Phone = phone.current.value;
     const Pass = pass.current.value;
@@ -59,24 +59,22 @@ const SiginUp = () => {
       }
     }
     if (a + b + c === 3) {
-        const data = await axios.post("http://localhost:5500/register",{
-            name:Name,
-            phone:Phone,
-            password:Pass
-        });
-        if(data){
-           
-            const {auth,user}=data.data
-             localStorage.setItem("token",auth);
-             localStorage.setItem("user",user._id)
-             navigate("/home");
-        }
-        else{
-            alert("Something went wrong")
-        }
-   
+      const data = await axios.post("http://localhost:5500/register", {
+        name: Name,
+        phone: Phone,
+        password: Pass,
+      });
+      if (data) {
+        const { auth, user } = data.data;
+        console.log(data)
+        localStorage.setItem("token", auth);
+        localStorage.setItem("user", user._id);
+        localStorage.setItem("phone", user.phone);
+        navigate("/home");
+      } else {
+        alert("Something went wrong");
+      }
     }
-
   };
   return (
     <div className="w-full h-screen flex justify-center items-center bg-slate-950">
@@ -114,7 +112,9 @@ const SiginUp = () => {
             </small>
           )}
           {phoneErr && (
-            <small className="text-red-600 text-[1rem] ">Invaild phone no.</small>
+            <small className="text-red-600 text-[1rem] ">
+              Invaild phone no.
+            </small>
           )}
         </div>
         <div className="flex flex-col my-2">

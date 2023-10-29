@@ -1,19 +1,27 @@
-import React, { useEffect } from 'react'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
-import Nav from '../components/Nav';
-import CardList from '../components/OpenCardList';
+import React, { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import Nav from "../components/Nav";
+import CardList from "../components/OpenCardList";
+import axios from "axios";
 
 const Home = () => {
-    const navigate=useNavigate();
-    useEffect(()=>{
-        if (!localStorage.getItem("token")) {
-            navigate("/");
-        }
-    },[])
+  const navigate = useNavigate();
+  const [username,setUsername]=useState("")
+  const getUser=async()=>{
+    let user = await axios.get(`http://localhost:5500/user/${localStorage.getItem("user")}`);
+    user=user.data
+    setUsername(user.name);
+  }
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+        navigate("/");
+    }
+    getUser();
+  }, []);
 
   return (
     <div className="w-screen h-screen flex bg-slate-950  flex-col ">
-      <Nav username={"Shivam"} />
+      <Nav username={username} />
       <div className="py-3 flex w-full justify-around my-2   text-white mt-2">
         <button className="font-semibold md:text-xl cursor-pointer">
           <Link to={"/home/request"}>Bet Request</Link>
@@ -36,6 +44,6 @@ const Home = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Home
+export default Home;
