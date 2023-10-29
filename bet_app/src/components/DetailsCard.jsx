@@ -9,6 +9,7 @@ const DetailsCard = ({
   senderphone,
   receiver,
   receiverResp,
+  receiverNumber,
   description,
   ResolutionDate,
   Wager,
@@ -132,7 +133,7 @@ const DetailsCard = ({
           <button
             className="text-[3rem] lg:mx-0 mx-4 text-green-600"
             onClick={() => {
-              AcceptBet(Betid);
+              AcceptBet(Betid,ResolutionDate,senderphone,receiverNumber);
             }}
           >
             <AiOutlineCheckCircle />

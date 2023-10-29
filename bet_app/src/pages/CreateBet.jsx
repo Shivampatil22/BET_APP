@@ -27,8 +27,10 @@ const CreateBet = () => {
     };
   const sendResp = async () => {
     try {
-      const response = await axios.post(
-        `http://localhost:5500/api/sendmessage`
+      const response = await axios.post(`http://localhost:5500/api/sendmessage`,
+        {
+          number: receiverNumber
+        }
       );
 
       console.log("Response:", response.data);
@@ -40,6 +42,7 @@ const CreateBet = () => {
   const navigate = useNavigate();
 
   const initiateBet = async () => {
+    console.warn(resolDate);
     if (
       !senderName ||
       !senderResponse ||
