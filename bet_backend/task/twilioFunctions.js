@@ -3,12 +3,14 @@ const accountSid=process.env.TWILIO_ACCOUNT_SID
 const authToken=process.env.TWILIO_AUTH_TOKEN
 const serviceId=process.env.TWILIO_MESSAGING_SERVICE_ID;
 const client = require('twilio')(accountSid, authToken);
+const schedule = require('node-schedule');
+const Bet = require('../model/betSchema');
 
 
 const sendMessage = async (req, resp) => {
     try {
       const message = await client.messages.create({
-        to: '+918303853619',
+        to: `+91${req.body.number}`,
         from: '+16562130651',
         messagingServiceSid: serviceId,
         body: `Hi there is a bet being placed, please click the link below to accept/decline the request `,
@@ -20,6 +22,11 @@ const sendMessage = async (req, resp) => {
       // Handle the error if the message wasn't sent
       console.error(error);
       resp.status(500).json({ error: 'Message sending failed', details: error.message });
+    }
+
+    const check = req.params.check;
+    if(check == '1'){
+
     }
 }
 
@@ -48,17 +55,15 @@ const sendResolutionUpdate = async (req, resp) => {
     const utcHours = utcDate.getUTCHours();
     const utcMin = utcDate.getUTCMinutes();
     const utcSec = utcDate.getUTCSeconds();
-
-    console.log(utcYear, utcMonth, utcDay, utcHours, utcMin, utcSec)
     
   try {
     const message = await client.messages.create({
-      to: '+918303853619',
+      to: `+91${req.body.number}`,
       from: '+16562130651',
       messagingServiceSid: serviceId,
       sendAt: new Date(Date.UTC(utcYear,utcMonth-1,utcDay,utcHours,utcMin,utcSec)),
       scheduleType: 'fixed',
-      body: `Hi there is a bet being placed, please click the link below to accept/decline the request `,
+      body: `Hello, Today the resolution date has hit, please give the final responses of the outcome of the bet placed `,
     });
     
     // Send a response to the API
@@ -68,6 +73,24 @@ const sendResolutionUpdate = async (req, resp) => {
     console.error(error);
     resp.status(500).json({ error: 'Message sending failed', details: error.message });
   }
+
+  if(req.params.check == '1'){
+   
+    const date = `${req.body.resolDate}.000+5:30`
+    console.log(date);
+    const job = schedule.scheduleJob(date, async function(){
+      try{
+        let result = await Bet.findOne({_id:req.params.id})
+        result.status='final'
+        result=await result.save();
+        console.log("status updated from open --> final")
+      }catch(error){
+        console.log(error);
+      }
+    });
+  }
+  
 }
 
 module.exports = {sendMessage, sendResolutionUpdate};
+

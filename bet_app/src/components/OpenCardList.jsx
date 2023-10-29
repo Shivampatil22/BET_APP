@@ -58,6 +58,7 @@ const CardList = () => {
             receiver={receiverName}
             receiverResp={receiverResponse}
             senderphone={senderNumber}
+            receiverNumber={receiverNumber}
             description={criteria}
             ResolutionDate={resolDate}
             Wager={wager}

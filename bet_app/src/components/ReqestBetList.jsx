@@ -1,5 +1,6 @@
 import DetailsCard from "./DetailsCard";
 import React, { useEffect, useState } from "react";
+
 import axios from "axios";
 const ReqestBetList = () => {
   const [BetList, setBetList] = useState([]);
@@ -16,7 +17,7 @@ const ReqestBetList = () => {
   useEffect(() => {
     GetRequests();
   }, []);
-
+  
   const DeleteBet = async (id) => {
     let result = await axios.delete(
       `http://localhost:5500/api/deletebet/${id}`
@@ -28,7 +29,11 @@ const ReqestBetList = () => {
     console.log(list)
     setBetList(list);
   };
-  const AcceptBet = async (id) => {
+
+  
+
+  //import sender number from get
+  const AcceptBet = async (id, resolDate,senderNumber,receiverNumber) => {
     let result = await axios.patch(
       `http://localhost:5500/api/updatestatus/${id}`,
       {
@@ -40,8 +45,26 @@ const ReqestBetList = () => {
     );
     list = list.data;
     
-    setBetList(list);
-  };
+    setBetList(list);    
+    //2 tasks: 
+    //Node scheduler to change the status from open to final
+    //execute scheduled message as soon as the request is accepted.
+
+    //task 1:
+    let msg1 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}/1`,
+      {
+        resolDate: resolDate,
+        number: senderNumber
+      }
+    );
+    let msg2 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}/0`,
+      {
+        resolDate: resolDate,
+        number: receiverNumber
+      }
+    );
+    console.log(`Scheduled message sent for: ${resolDate}`);
+  };  
 
   if (BetList.length == 0) {
     return (
@@ -60,6 +83,7 @@ const ReqestBetList = () => {
           receiverName,
           receiverResponse,
           receiverNumber,
+          senderNumber,
           criteria,
           resolDate,
           wager,
@@ -74,6 +98,8 @@ const ReqestBetList = () => {
             senderResp={senderResponse}
             receiver={receiverName}
             receiverResp={receiverResponse}
+            senderphone={senderNumber}
+            receiverNumber={receiverNumber}
             description={criteria}
             ResolutionDate={resolDate}
             Wager={wager}

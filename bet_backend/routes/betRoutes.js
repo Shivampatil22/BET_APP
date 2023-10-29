@@ -21,7 +21,7 @@ router.patch('/api/updatestatus/:id', updateStatus);
 router.post('/api/sendmessage', sendMessage);
 
 //api to send scheduled message at resolution date using twilio
-router.post('/api/sendresolupdate', sendResolutionUpdate);
+router.post('/api/sendresolupdate/:id/:check', sendResolutionUpdate);
 
 //api to set the final response of both individuals/parties depending on an check code passed as params
 router.patch('/api/setfinalresp/:id/:check', setFinalResp);
