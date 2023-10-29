@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {createBet, updateStatus, getBet, setFinalResp, deleteBet} = require('../task/betFunctions');
+const {createBet, updateStatus, getBet, setFinalResp, deleteBet,getRequestBet} = require('../task/betFunctions');
 const {sendMessage, sendResolutionUpdate} = require('../task/twilioFunctions');
 
 //api to create a new bet
@@ -8,6 +8,8 @@ router.post('/api/createbet', createBet);
 
 //api to get all the bets
 router.get('/api/getbet/:num/:status', getBet);
+
+router.get('/api/getrequest/:num/:status', getRequestBet);
 
 //api to delete a specific bet
 router.delete('/api/deletebet/:id', deleteBet);

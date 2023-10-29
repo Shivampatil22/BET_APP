@@ -31,6 +31,24 @@ const getBet = async (req, resp) => {
   }
 };
 
+
+//api to get bet Request
+const getRequestBet = async (req, resp) => {
+  try {
+ 
+    const arr2 = await Bet.find({
+      receiverNumber: req.params.num,
+      status: req.params.status
+    });
+
+    
+    resp.send(arr2);
+  } catch (error) {
+    resp.status(500).send('An error occurred: ' + error.message);
+  }
+};
+
+
 const deleteBet = async(req,resp) =>{
   try{
     const result = await Bet.deleteOne({_id:req.params.id})
@@ -77,5 +95,5 @@ const setFinalResp = async (req, resp) => {
 };
 
 
-module.exports = {createBet, updateStatus, getBet, setFinalResp, deleteBet};
+module.exports = {createBet, updateStatus, getBet, setFinalResp, deleteBet,getRequestBet};
 

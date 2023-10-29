@@ -55,6 +55,7 @@ const Login = () => {
         const { auth, user } = data.data;
         localStorage.setItem("token", auth);
         localStorage.setItem("user", user._id);
+        localStorage.setItem("phone", user.phone);
         navigate("/home");
       } else {
         alert("Something went wrong");
