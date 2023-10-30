@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {createBet, updateStatus, getBet, setFinalResp, deleteBet,getRequestBet, changetofinal} = require('../task/betFunctions');
-const {sendMessage, sendResolutionUpdate} = require('../task/twilioFunctions');
+const {sendMessage, sendResolutionUpdate, sendResult} = require('../task/twilioFunctions');
 
 //api to create a new bet
 router.post('/api/createbet', createBet);
@@ -26,9 +26,11 @@ router.post('/api/sendmessage', sendMessage);
 //api to send scheduled message at resolution date using twilio
 router.post('/api/sendresolupdate/:id', sendResolutionUpdate);
 
+//api to send final message of win and loss
+router.post("/api/sendresult",sendResult);
+
 //api to set the final response of both individuals/parties depending on an check code passed as params
 router.patch('/api/setfinalresp/:id/:check', setFinalResp);
-
 
 module.exports = router;
 

@@ -28,7 +28,9 @@ const CreateBet = () => {
     try {
       const response = await axios.post(`http://localhost:5500/api/sendmessage`,
         {
-          number: receiverNumber
+          number: receiverNumber,
+          receName: receiverName,
+          sendName: senderName,
         }
       );
 
