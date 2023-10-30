@@ -13,6 +13,7 @@ router.get('/api/getrequest/:num/:status', getRequestBet);
 
 //api to delete a specific bet
 router.delete('/api/deletebet/:id', deleteBet);
+
 //api to change the status to final
 router.patch("/api/updatefinal",changetofinal);
 
@@ -23,7 +24,7 @@ router.patch('/api/updatestatus/:id', updateStatus);
 router.post('/api/sendmessage', sendMessage);
 
 //api to send scheduled message at resolution date using twilio
-router.post('/api/sendresolupdate/:id/:check', sendResolutionUpdate);
+router.post('/api/sendresolupdate/:id', sendResolutionUpdate);
 
 //api to set the final response of both individuals/parties depending on an check code passed as params
 router.patch('/api/setfinalresp/:id/:check', setFinalResp);

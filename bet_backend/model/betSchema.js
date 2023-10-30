@@ -19,7 +19,7 @@ const betSchema = new mongoose.Schema({
   },
   receiverResponse: {
     type: String,
-    required: true, 
+    required: false, 
   },
   receiverNumber: {
     type: Number,
