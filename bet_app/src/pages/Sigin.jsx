@@ -77,18 +77,18 @@ const SiginUp = () => {
     }
   };
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-slate-950">
-      <div className="flex flex-col z-10 bg-[#151515] sm:rounded-lg p-5 sm:px-10 px-7 items-start sm:w-max w-full sm:h-max h-full ">
-        <div className="text-slate-50 font-semibold text-[1.7rem] mt-1 flex w-full ">
+    <div className="w-full h-screen flex justify-center items-center bg-blue-100">
+      <div className="flex flex-col z-10 bg-[#151515] sm:rounded-lg p-5 sm:px-10 px-7 items-start sm:w-max w-full sm:h-max h-full bg-blue-100 shadow-2xl">
+        <div className="font-semibold text-[1.7rem] mt-1 flex w-full ">
           Create a free account!
         </div>
         <div className="flex flex-col my-3">
-          <span className="text-slate-200 font-thin my-2 text-xl mb-3">
+          <span className="text-slate-900 font-medium my-2 text-xl mb-3">
             Name
           </span>
           <input
             type="text"
-            className="sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium "
+            className="border border-gray-300 sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium "
             ref={name}
           />
           {NameErr && (
@@ -98,12 +98,12 @@ const SiginUp = () => {
           )}
         </div>
         <div className="flex flex-col ">
-          <span className="text-slate-200 font-thin my-2 text-xl mb-3">
+          <span className="text-slate-900 font-medium my-2 text-xl mb-3">
             Phone
           </span>
           <input
             type="tel"
-            className="sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium "
+            className="border border-gray-300 sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium "
             ref={phone}
           />
           {phoneEmp && (
@@ -118,12 +118,12 @@ const SiginUp = () => {
           )}
         </div>
         <div className="flex flex-col my-2">
-          <span className="text-slate-200 font-thin my-2 text-xl mb-3">
+          <span className="text-slate-900 font-medium my-2 text-xl mb-3">
             Password
           </span>
           <input
             type="text"
-            className="sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium"
+            className="border border-gray-300 sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium"
             ref={pass}
           />
           {PassEmp && (
@@ -139,18 +139,18 @@ const SiginUp = () => {
         </div>
         <div className="flex w-full items-center justify-center mt-7 mb-5">
           <button
-            className="text-xl bg-slate-50 text-slate-900 px-4 py-2 font-semibold rounded-lg w-full active:scale-105 duration-200 "
+            className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full active:scale-105 duration-200 "
             onClick={() => {
               handleRegister();
             }}
           >
-            Register
+            Create Account
           </button>
         </div>
-        <div className="text-slate-50">
+        <div className="text-slate-900">
           Already have an account?
           <span
-            className="font-bold cursor-pointer"
+            className="font-bold cursor-pointer ml-1"
             onClick={() => {
               log();
             }}

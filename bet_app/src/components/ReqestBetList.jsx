@@ -51,13 +51,13 @@ const ReqestBetList = () => {
     //execute scheduled message as soon as the request is accepted.
 
     //task 1:
-    let msg1 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}/1`,
+    let msg1 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}`,
       {
         resolDate: resolDate,
         number: senderNumber
       }
     );
-    let msg2 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}/0`,
+    let msg2 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}`,
       {
         resolDate: resolDate,
         number: receiverNumber

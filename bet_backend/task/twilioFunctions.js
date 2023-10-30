@@ -23,11 +23,11 @@ const sendMessage = async (req, resp) => {
       resp.status(500).json({ error: 'Message sending failed', details: error.message });
     }
 
-    const check = req.params.check;
-    if(check == '1'){
+    // const check = req.params.check;
+    // if(check == '1'){
 
-    }
-}
+    // }
+};
 
 const sendResolutionUpdate = async (req, resp) => {
 
@@ -73,9 +73,7 @@ const sendResolutionUpdate = async (req, resp) => {
     resp.status(500).json({ error: 'Message sending failed', details: error.message });
   }
 
- 
-  
-}
+};
 
 module.exports = {sendMessage, sendResolutionUpdate};
 

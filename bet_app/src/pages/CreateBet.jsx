@@ -7,7 +7,6 @@ const CreateBet = () => {
   const [senderName, setSenderName] = useState("");
   const [senderResponse, setSenderResponse] = useState("");
   const [receiverName, setReceiverName] = useState("");
-  const [receiverResponse, setReceiverResponse] = useState("");
   const [receiverNumber, setReceiverNumber] = useState();
   const [criteria, setCriteria] = useState("");
   const [resolDate, setResolDate] = useState("");
@@ -43,12 +42,18 @@ const CreateBet = () => {
 
   const initiateBet = async () => {
     console.warn(resolDate);
+    let receiverResponse='Yes'
+    if(senderResponse =='Yes'){
+        receiverResponse='No'
+    }else{
+      receiverResponse='Yes'
+    }
+
     if (
       !senderName ||
       !senderResponse ||
       !senderNumber ||
       !receiverName ||
-      !receiverResponse ||
       !receiverNumber ||
       !criteria ||
       !resolDate ||
@@ -61,14 +66,6 @@ const CreateBet = () => {
     if (isNaN(receiverNumber)) {
       setError(true);
       return false; // ReceiverNumber is not a valid number
-    }
-
-    if (
-      (senderResponse === "YES" && receiverResponse === "YES") ||
-      (senderResponse === "NO" && receiverResponse === "NO")
-    ) {
-      alert("Responses of both entities cannot be same");
-      return false;
     }
 
     const betData = {
@@ -117,6 +114,9 @@ const CreateBet = () => {
       wager,
       status
     );
+
+   
+
   };
 
   useEffect(() => {
@@ -126,14 +126,15 @@ const CreateBet = () => {
      getUser();
   }, []);
 
+
   return (
-    <div className="w-screen h-full flex justify-center bg-slate-950 flex-col items-center">
+    <div className="w-screen h-full flex justify-center bg-blue-100 flex-col items-center">
       <Nav username={username} />
-      <div className="w-full max-w-md p-8 m-4 bg-white rounded-lg shadow-xl">
-        <h1 className="text-3xl font-semibold mb-4">Initiate Bet</h1>
+      <div className="bg-blue-100 w-full max-w-md p-8 m-4 bg-white rounded-lg shadow-2xl">
+        <h1 className="text-center text-3xl font-semibold mb-4">Initiate Bet</h1>
         <div className="mb-4 ">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            className="block text-slate-900 text-sm font-bold mb-2 text-left"
             htmlFor="initName"
           >
             Initiator Name
@@ -153,7 +154,7 @@ const CreateBet = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+          <label className="block text-slate-900 text-sm font-bold mb-2 text-left">
             Initiator Response
           </label>
 
@@ -164,11 +165,11 @@ const CreateBet = () => {
                   type="radio"
                   name="senderResponse"
                   value="Option 1"
-                  checked={senderResponse === "YES"}
-                  onChange={() => setSenderResponse("YES")}
+                  checked={senderResponse === "Yes"}
+                  onChange={() => setSenderResponse("Yes")}
                   className="mr-1"
                 />
-                YES
+                Yes
               </label>
             </div>
             <div className="mr-2">
@@ -177,11 +178,11 @@ const CreateBet = () => {
                   type="radio"
                   name="senderResponse"
                   value="Option 2"
-                  checked={senderResponse === "NO"}
-                  onChange={() => setSenderResponse("NO")}
+                  checked={senderResponse === "No"}
+                  onChange={() => setSenderResponse("No")}
                   className="ml-3 mr-1"
                 />
-                NO
+                No
               </label>
             </div>
           </div>
@@ -193,7 +194,7 @@ const CreateBet = () => {
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            className="block text-slate-900 text-sm font-bold mb-2 text-left"
             htmlFor="receiverName"
           >
             Counterparty Name
@@ -213,47 +214,8 @@ const CreateBet = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
-            Counterparty Response
-          </label>
-          <div className="flex items-start">
-            {" "}
-            {/* Align options to the left */}
-            <div className="mr-2">
-              <label>
-                <input
-                  type="radio"
-                  name="receiverResponse"
-                  value="Option A"
-                  checked={receiverResponse === "YES"}
-                  onChange={() => setReceiverResponse("YES")}
-                  className="mr-1"
-                />
-                YES
-              </label>
-            </div>
-            <div className="mr-2">
-              <label>
-                <input
-                  type="radio"
-                  name="receiverResponse"
-                  value="Option B"
-                  checked={receiverResponse === "NO"}
-                  onChange={() => setReceiverResponse("NO")}
-                  className="ml-3 mr-1"
-                />
-                NO
-              </label>
-            </div>
-          </div>
-          {error && !receiverResponse && (
-            <span className="text-red-500 text-left">Select a response</span>
-          )}
-        </div>
-
-        <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            className="block text-slate-900 text-sm font-bold mb-2 text-left"
             htmlFor="wager"
           >
             Counterparty Phone Number
@@ -275,7 +237,7 @@ const CreateBet = () => {
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            className="block text-slate-900 text-sm font-bold mb-2 text-left"
             htmlFor="criteria"
           >
             Criteria
@@ -295,7 +257,7 @@ const CreateBet = () => {
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            className="block text-slate-900 text-sm font-bold mb-2 text-left"
             htmlFor="resolDate"
           >
             Resolution Date
@@ -316,7 +278,7 @@ const CreateBet = () => {
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            className="block text-slate-900 text-sm font-bold mb-2 text-left"
             htmlFor="wager"
           >
             Wager
@@ -336,7 +298,7 @@ const CreateBet = () => {
 
         <button
           onClick={initiateBet}
-          className="bg-blue-500 text-white rounded-md px-4 py-2 hover-bg-blue-600 w-full"
+          className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full"
         >
           Initiate Bet
         </button>
