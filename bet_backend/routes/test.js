@@ -1,4 +1,4 @@
-const schedule = require('node-schedule');
+
 const Bet = require('../model/betSchema');
 // const getISTFromUTC = (inputDateString)=>{
 //     const dateObj = new Date(inputDateString);
@@ -35,29 +35,27 @@ const Bet = require('../model/betSchema');
 //     };
 //   };
 // console.log(getISTFromUTC("2023-10-28T01:00"));
-const get=async()=>{
-  let result = await Bet.find()
-  // result.status='final'
-  // result=await result.save();
-  console.log(result)
-}
-const fun = ()=>{
-  const date = new Date(2023,10,30,0,47,0)
-  console.log(date.toTimeString())
-    const job = schedule.scheduleJob(date, async function(){
-      console.log("HIT");
-      try{
-        console.log(new Date().toString());
-        // let result = await Bet.find()
-        // result.status='final'
-        // result=await result.save();
-        
-      }catch(error){
-        console.log("error scheduling job")
-      }
+
+
+console.log(isDateInPast("2023-10-30T10:32"))
   
-});
-}
+// const fun = ()=>{
+//   const date = new Date(2023,10,30,0,47,0)
+//   console.log(date.toTimeString())
+//     const job = schedule.scheduleJob(date, async function(){
+//       console.log("HIT");
+//       try{
+//         console.log(new Date().toString());
+//         // let result = await Bet.find()
+//         // result.status='final'
+//         // result=await result.save();
+        
+//       }catch(error){
+//         console.log("error scheduling job")
+//       }
+  
+// });
+// }
 
 
-fun();
+// fun();

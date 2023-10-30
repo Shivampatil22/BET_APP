@@ -3,7 +3,6 @@ const accountSid=process.env.TWILIO_ACCOUNT_SID
 const authToken=process.env.TWILIO_AUTH_TOKEN
 const serviceId=process.env.TWILIO_MESSAGING_SERVICE_ID;
 const client = require('twilio')(accountSid, authToken);
-const schedule = require('node-schedule');
 const Bet = require('../model/betSchema');
 
 
@@ -74,21 +73,7 @@ const sendResolutionUpdate = async (req, resp) => {
     resp.status(500).json({ error: 'Message sending failed', details: error.message });
   }
 
-  if(req.params.check == '1'){
-   
-    const date = `${req.body.resolDate}.000+5:30`
-    console.log(date);
-    const job = schedule.scheduleJob(date, async function(){
-      try{
-        let result = await Bet.findOne({_id:req.params.id})
-        result.status='final'
-        result=await result.save();
-        console.log("status updated from open --> final")
-      }catch(error){
-        console.log(error);
-      }
-    });
-  }
+ 
   
 }
 

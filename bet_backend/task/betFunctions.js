@@ -49,6 +49,18 @@ const getRequestBet = async (req, resp) => {
 };
 
 
+const changetofinal=async(req,resp)=>{
+  try{
+    const filter = { _id: { $in: req.body.ids } };
+    const update = { $set: { status:"final" } };
+    const result =Bet.updateMany(filter, update)
+    resp.status(200).send("success")
+  }
+  catch(e){
+    resp.status(500).send( e.message);
+  }
+}
+
 const deleteBet = async(req,resp) =>{
   try{
     const result = await Bet.deleteOne({_id:req.params.id})
@@ -95,5 +107,5 @@ const setFinalResp = async (req, resp) => {
 };
 
 
-module.exports = {createBet, updateStatus, getBet, setFinalResp, deleteBet,getRequestBet};
+module.exports = {createBet, updateStatus, getBet, setFinalResp, deleteBet,getRequestBet,changetofinal};
 
