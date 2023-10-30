@@ -5,6 +5,8 @@ import axios from "axios";
 const CardList = () => {
   const [BetList, setBetList] = useState([]);
   const num = localStorage.getItem("phone");
+
+  // Function to check if the date is in the past (resolved)
   const isDateInResolved = (customDateFormat) => {
     // Extract the year, month, day, and time from the custom format
     const [datePart, timePart] = customDateFormat.split("T");
@@ -15,39 +17,110 @@ const CardList = () => {
     const currentDate = new Date();
     return givenDate <= currentDate;
   };
+
+  // Function to fetch open bets
   const GetOpenBets = async () => {
-    let list1 = await axios.get(`http://localhost:5500/api/getbet/${num}/open`);
-    list1 = list1.data;
-    let list2 = await axios.get(
-      `http://localhost:5500/api/getbet/${num}/final`
-    );
-    let ids = [];
-    for (let i = 0; list1.length > i; i++) {
-      const { resolDate, _id } = list1[i];
-      if (isDateInResolved(resolDate)) {
+    try {
+      let list1 = await axios.get(
+        `http://localhost:5500/api/getbet/${num}/open`
+      );
+      list1 = list1.data;
+      let list2 = await axios.get(
+        `http://localhost:5500/api/getbet/${num}/final`
+      );
+      let ids = [];
+
+      for (let i = 0; i < list1.length; i++) {
+        const { resolDate, _id } = list1[i];
+        if (isDateInResolved(resolDate)) {
+          ids.push(_id);
+          list1[i].status = "final";
+        }
+      }
+
+      list2 = list2.data;
+      list2 = [...list2, ...list1];
      
-        ids.push(_id);
-        list1[i].status = "final";
+      setBetList(list2);
+
+      if (ids.length > 0) {
+        await axios.patch("http://localhost:5500/api/updatefinal", {
+          ids: [...ids],
+        });
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching open bets:", error);
+    }
+  };
+  // Function to send a response to the bet
+  const SendRespone = async (
+    senderPhone,
+    id,
+    resp,
+    senderResp,
+    receiverResp
+  ) => {
+  
+    let check = 0;
+    if (senderPhone == num) {
+      check = 1;
+    }
+    if (check == 1) {
+      if (receiverResp == "NIL") {
+        await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/1`, {
+          finalResp: resp,
+        });
+      } else {
+        if (receiverResp == resp) {
+          alert("Both participants have given the same response");
+        } else {
+          await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/1`, {
+            finalResp: resp,
+          });
+          if (resp == "Yes") {
+            alert("Congratulations, you won the bet");
+          }
+          await axios.patch(`http://localhost:5500/api/updatestatus/${id}`, {
+            status: "close",
+          });
+        }
+      }
+    } else {
+      if (senderResp == "NIL") {
+        await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/0`, {
+          finalResp: resp,
+        });
+      } else {
+        if (senderResp == resp) {
+          alert("Both participants have given the same response");
+        } else {
+          await axios.patch(`http://localhost:5500/api/setfinalresp/${id}/0`, {
+            finalResp: resp,
+          });
+          if (resp == "Yes") {
+            alert("Congratulations, you won the bet");
+          }
+          await axios.patch(`http://localhost:5500/api/updatestatus/${id}`, {
+            status: "close",
+          });
+        }
       }
     }
-    list2 = list2.data;
-    list2 = [...list2, ...list1];
-    setBetList(list2);
-    if (ids.length > 0) {
-      
-      await axios.patch("http://localhost:5500/api/updatefinal",{ids:[...ids]});
-    }
+    GetOpenBets();
+    alert("Your Response is noted");
   };
   useEffect(() => {
     GetOpenBets();
   }, []);
-  if (BetList.length == 0) {
+
+  if (BetList.length === 0) {
     return (
-      <div className="w-[96%] pb-4 h-full text-white flex justify-center items-center">
+      <div className="w-[96%] pb-4 h-full text-2xl font-semibold text-black flex justify-center items-center">
         No Bets Yet....
       </div>
     );
   }
+
   return (
     <div className="w-[96%] pb-4 h-full flex flex-col scroller">
       {BetList.map((bet, index) => {
@@ -64,6 +137,7 @@ const CardList = () => {
           senderFinalResp,
           receiverFinalResp,
         } = bet;
+
         return (
           <DetailsCard
             key={index}
@@ -81,6 +155,7 @@ const CardList = () => {
             Result={"none"}
             FinalsenderResp={senderFinalResp}
             FinalreceiverResp={receiverFinalResp}
+            SendRespone={SendRespone}
           />
         );
       })}

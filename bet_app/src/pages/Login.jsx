@@ -10,14 +10,20 @@ const Login = () => {
   const phone = useRef();
   const pass = useRef();
   const navigate = useNavigate();
+
+  // Function to navigate to the registration page
   const sign = () => {
     navigate("/");
   };
+
+  // Function to validate a phone number format
   const validatePhone = (phone) => {
     return String(phone)
       .toLowerCase()
       .match(/^(?:\+\d{1,3})?\d{10}$/);
   };
+
+  // Function to handle user login
   const handleRegister = async (e) => {
     const Phone = phone.current.value;
     const Pass = pass.current.value;
@@ -35,6 +41,7 @@ const Login = () => {
         setPhoneErr(true);
       }
     }
+
     if (!Pass) {
       setPassEmp(true);
     } else {
@@ -46,27 +53,35 @@ const Login = () => {
         c = 1;
       }
     }
+
     if (b + c === 2) {
-      const data = await axios.post("http://localhost:5500/login", {
-        phone: Phone,
-        password: Pass,
-      });
-      if (data) {
-        const { auth, user } = data.data;
-        localStorage.setItem("token", auth);
-        localStorage.setItem("user", user._id);
-        localStorage.setItem("phone", user.phone);
-        navigate("/home");
-      } else {
-        alert("Something went wrong");
+      try {
+        const data = await axios.post("http://localhost:5500/login", {
+          phone: Phone,
+          password: Pass,
+        });
+
+        if (data) {
+          const { auth, user } = data.data;
+          localStorage.setItem("token", auth);
+          localStorage.setItem("user", user._id);
+          localStorage.setItem("phone", user.phone);
+          navigate("/home/open");
+        } else {
+          alert("Something went wrong");
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
+        alert("Login failed. Please try again.");
       }
     }
   };
+
   return (
     <div className="w-full h-screen flex justify-center items-center">
       <div className="flex flex-col z-10 bg-[#151515] sm:rounded-lg p-5 sm:px-10 px-13 items-start sm:w-max w-full sm:h-max h-full">
         <div className="text-slate-50 font-semibold text-[1.7rem] mt-1 flex w-full ">
-          Welcome to Sharead
+          Welcome to BetApp
         </div>
 
         <div className="flex flex-col ">
@@ -84,7 +99,7 @@ const Login = () => {
             </small>
           )}
           {PhoneErr && (
-            <small className="text-red-600 text-[1rem] ">Invaild phone</small>
+            <small className="text-red-600 text-[1rem] ">Invalid phone</small>
           )}
         </div>
         <div className="flex flex-col my-2">
@@ -92,7 +107,7 @@ const Login = () => {
             Password
           </span>
           <input
-            type="text"
+            type="password" // Change input type to password for secure entry
             className="sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium"
             ref={pass}
           />
@@ -103,7 +118,7 @@ const Login = () => {
           )}
           {PassErr && (
             <small className="text-red-600 text-[1rem] ">
-              Password must have 6 character
+              Password must have at least 6 characters
             </small>
           )}
         </div>
@@ -114,7 +129,7 @@ const Login = () => {
               handleRegister();
             }}
           >
-            Register
+            Login
           </button>
         </div>
         <div className="text-slate-50">
@@ -125,7 +140,7 @@ const Login = () => {
               sign();
             }}
           >
-            SignIn
+            Sign Up
           </span>{" "}
           instead
         </div>

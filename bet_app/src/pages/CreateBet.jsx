@@ -8,7 +8,7 @@ const CreateBet = () => {
   const [senderResponse, setSenderResponse] = useState("");
   const [receiverName, setReceiverName] = useState("");
   const [receiverResponse, setReceiverResponse] = useState("");
-  const [receiverNumber, setReceiverNumber] = useState();
+  const [receiverNumber, setReceiverNumber] = useState("");
   const [criteria, setCriteria] = useState("");
   const [resolDate, setResolDate] = useState("");
   const [wager, setWager] = useState("");
@@ -17,32 +17,38 @@ const CreateBet = () => {
   const [receiverFinalResp, setReceiverFinalResp] = useState("NIL");
   const senderNumber = localStorage.getItem("phone");
   const [error, setError] = useState(false);
-   const [username, setUsername] = useState("");
-    const getUser = async () => {
-      let user = await axios.get(
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
+  // Function to fetch user data
+  const getUser = async () => {
+    try {
+      const user = await axios.get(
         `http://localhost:5500/user/${localStorage.getItem("user")}`
       );
-      user = user.data;
-      setUsername(user.name);
-    };
-  const sendResp = async () => {
-    try {
-      const response = await axios.post(`http://localhost:5500/api/sendmessage`,
-        {
-          number: receiverNumber
-        }
-      );
-
-      console.log("Response:", response.data);
+      setUsername(user.data.name);
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("An error occurred while fetching user data:", error);
     }
   };
 
-  const navigate = useNavigate();
+  // Function to send a response to the counterparty
+  const sendResp = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/api/sendmessage",
+        {
+          number: receiverNumber,
+        }
+      );
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("An error occurred while sending a response:", error);
+    }
+  };
 
+  // Function to initiate a bet
   const initiateBet = async () => {
-    console.warn(resolDate);
     if (
       !senderName ||
       !senderResponse ||
@@ -55,20 +61,20 @@ const CreateBet = () => {
       !wager
     ) {
       setError(true);
-      return false; //Empty values provided
+      return;
     }
 
     if (isNaN(receiverNumber)) {
       setError(true);
-      return false; // ReceiverNumber is not a valid number
+      return;
     }
 
     if (
       (senderResponse === "YES" && receiverResponse === "YES") ||
       (senderResponse === "NO" && receiverResponse === "NO")
     ) {
-      alert("Responses of both entities cannot be same");
-      return false;
+      alert("Responses of both entities cannot be the same");
+      return;
     }
 
     const betData = {
@@ -93,8 +99,7 @@ const CreateBet = () => {
       );
 
       if (response.status === 200) {
-      
-        //calling the send response api after posting new bet to get the bet confirmation from the counterparty.
+        // Calling the send response API after posting a new bet to get the bet confirmation from the counterparty.
         sendResp();
         alert("Bet created successfully");
         navigate("/home");
@@ -104,26 +109,13 @@ const CreateBet = () => {
     } catch (error) {
       console.error("An error occurred while creating the bet", error);
     }
-
-    console.warn(
-      senderName,
-      senderResponse,
-      senderNumber,
-      receiverName,
-      receiverResponse,
-      receiverNumber,
-      criteria,
-      resolDate,
-      wager,
-      status
-    );
   };
 
   useEffect(() => {
-     if (!localStorage.getItem("token")) {
-       navigate("/");
-     }
-     getUser();
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+    getUser();
   }, []);
 
   return (

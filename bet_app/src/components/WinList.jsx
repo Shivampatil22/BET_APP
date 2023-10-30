@@ -1,44 +1,53 @@
 import DetailsCard from "./DetailsCard";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
 const WinList = () => {
   const [BetList, setBetList] = useState([]);
-  const BetInvite = () => {
-    console.log("HEllo");
-  };
-  const BetResult = () => {
-    console.log("HEllo");
-  };
-  const GetWins=async()=>{
-     let list = await axios.get(
-       `http://localhost:5500/api/getbet/${num}/close`
-     );
-     list = list.data;
-     let final_list = [];
-     for (let i = 0; list.length> i; i++) {
-       if (list[i].senderNumber == num && list[i].senderFinalResp == "Yes") {
-         final_list.push(list[i]);
-       }
-       if (
-         list[i].receiverNumber == num &&
-         list[i].receiverFinalResp == "Yes"
-       ) {
-         final_list.push(list[i]);
-       }
-     }
-     setBetList(final_list);
-  }
   const num = localStorage.getItem("phone");
-  useEffect( () => {
-   GetWins();
+
+  // Function to fetch closed bets with wins
+  const getWins = async () => {
+    try {
+      let list = await axios.get(
+        `http://localhost:5500/api/getbet/${num}/close`
+      );
+      list = list.data;
+      let finalList = [];
+
+      for (let i = 0; i < list.length; i++) {
+     
+        if (list[i].senderNumber == num && list[i].senderFinalResp == "Yes") {
+          
+          finalList.push(list[i]);
+        }
+        if (
+          list[i].receiverNumber == num &&
+          list[i].receiverFinalResp == "Yes"
+        ) {
+          
+          finalList.push(list[i]);
+        }
+      }
+     
+      setBetList(finalList);
+    } catch (error) {
+      console.error("An error occurred while fetching bets:", error);
+    }
+  };
+
+  useEffect(() => {
+    getWins();
   }, []);
-  if (BetList.length == 0) {
+
+  if (BetList.length === 0) {
     return (
-      <div className="w-[96%] pb-4 h-full text-white flex justify-center items-center">
+      <div className="w-[96%] pb-4 h-full text-2xl font-semibold text-black flex justify-center items-center">
         No Bets Yet....
       </div>
     );
   }
+
   return (
     <div className="w-[96%] pb-4 h-full flex flex-col scroller">
       {BetList.map((bet, index) => {
@@ -70,11 +79,9 @@ const WinList = () => {
             Result={"win"}
             FinalsenderResp={senderFinalResp}
             FinalreceiverResp={receiverFinalResp}
-           
           />
         );
       })}
-      
     </div>
   );
 };

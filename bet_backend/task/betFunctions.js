@@ -1,6 +1,6 @@
 const Bet = require('../model/betSchema');
 
-//api to create new bet
+// API to create a new bet
 const createBet = async (req, resp) => {
   try {
     let bet = new Bet(req.body);
@@ -11,7 +11,7 @@ const createBet = async (req, resp) => {
   }
 };
 
-//api to find all the bets using a specific number involved in both sender and receiver.
+// API to find all the bets using a specific number involved in both sender and receiver.
 const getBet = async (req, resp) => {
   try {
     const arr1 = await Bet.find({
@@ -31,81 +31,81 @@ const getBet = async (req, resp) => {
   }
 };
 
-
-//api to get bet Request
+// API to get bet requests
 const getRequestBet = async (req, resp) => {
   try {
- 
     const arr2 = await Bet.find({
       receiverNumber: req.params.num,
       status: req.params.status
     });
 
-    
     resp.send(arr2);
   } catch (error) {
     resp.status(500).send('An error occurred: ' + error.message);
   }
 };
 
-
-const changetofinal=async(req,resp)=>{
-  try{
+// API to change the status to "final" for multiple bets
+const changetofinal = async (req, resp) => {
+  try {
     const filter = { _id: { $in: req.body.ids } };
-    const update = { $set: { status:"final" } };
-    const result =Bet.updateMany(filter, update)
-    resp.status(200).send("success")
+    const update = { $set: { status: "final" } };
+    const result = await Bet.updateMany(filter, update);
+    resp.status(200).send("Success");
+  } catch (e) {
+    resp.status(500).send(e.message);
   }
-  catch(e){
-    resp.status(500).send( e.message);
-  }
-}
+};
 
-const deleteBet = async(req,resp) =>{
-  try{
-    const result = await Bet.deleteOne({_id:req.params.id})
+// API to delete a bet by ID
+const deleteBet = async (req, resp) => {
+  try {
+    const result = await Bet.deleteOne({ _id: req.params.id });
     resp.send(result);
-  }catch(error){
+  } catch (error) {
     resp.status(500).send('Error deleting your bet');
   }
 };
 
-//api to update the status
+// API to update the status of a bet
 const updateStatus = async (req, resp) => {
   try {
-    let result = await Bet.findOne({_id:req.params.id})
-    result.status=req.body.status;
-    result=await result.save();
+    let result = await Bet.findOne({ _id: req.params.id });
+    if (!result) {
+      resp.status(404).send('Bet not found');
+      return;
+    }
+    result.status = req.body.status;
+    result = await result.save();
     resp.send(result);
   } catch (error) {
     resp.status(500).send({ error: 'Error updating bet status', details: error.message });
   }
 };
 
-
-//api which finds a bet with specific id and then sets the final resp of both parties according to the check code sent.
+// API to find a bet with a specific ID and then set the final response of both parties
 const setFinalResp = async (req, resp) => {
   try {
     let result = await Bet.findOne({ _id: req.params.id });
+    if (!result) {
+      resp.status(404).send('Bet not found');
+      return;
+    }
     const check = req.params.check;
-    const finalResp = req.body.finalResp
-    if (check == '1') {
+    const finalResp = req.body.finalResp;
+    if (check === '1') {
       result.senderFinalResp = finalResp;
-    } else if(check =='0') {
+    } else if (check === '0') {
       result.receiverFinalResp = finalResp;
-    }else{
+    } else {
       result.senderFinalResp = "NIL";
       result.receiverFinalResp = "NIL";
     }
-
     result = await result.save();
     resp.send(result);
-
   } catch (error) {
     resp.status(500).send({ error: 'An error occurred while processing your request' });
   }
 };
 
-
-module.exports = {createBet, updateStatus, getBet, setFinalResp, deleteBet,getRequestBet,changetofinal};
-
+module.exports = { createBet, updateStatus, getBet, setFinalResp, deleteBet, getRequestBet, changetofinal };

@@ -4,39 +4,47 @@ import axios from "axios";
 
 const LoseList = () => {
   const [BetList, setBetList] = useState([]);
-  const BetInvite = () => {
-    console.log("HEllo");
-  };
-  const BetResult = () => {
-    console.log("HEllo");
-  };
+
   const num = localStorage.getItem("phone");
-  const GetloseBets=async()=>{
-     let list = await axios.get(
-       `http://localhost:5500/api/getbet/${num}/close`
-     );
-     let final_list = [];
-     list=list.data;
-     for (let i = 0; list.length> i; i++) {
-       if (list[i].senderNumber == num && list[i].senderFinalResp == "No") {
-         final_list.push(list[i]);
-       }
-       if (list[i].receiverNumber == num && list[i].receiverFinalResp == "No") {
-         final_list.push(list[i]);
-       }
-     }
-     setBetList(final_list);
-  }
-  useEffect( () => {
-   GetloseBets();
+
+  // Function to fetch lose bets
+  const GetloseBets = async () => {
+    try {
+      let list = await axios.get(
+        `http://localhost:5500/api/getbet/${num}/close`
+      );
+      let final_list = [];
+      list = list.data;
+
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].senderNumber == num && list[i].senderFinalResp == "No") {
+          final_list.push(list[i]);
+        }
+        if (
+          list[i].receiverNumber == num &&
+          list[i].receiverFinalResp == "No"
+        ) {
+          final_list.push(list[i]);
+        }
+      }
+      setBetList(final_list);
+    } catch (error) {
+      console.error("An error occurred while fetching lose bets:", error);
+    }
+  };
+
+  useEffect(() => {
+    GetloseBets();
   }, []);
+
   if (BetList.length == 0) {
     return (
-      <div className="w-[96%] pb-4 h-full text-white flex justify-center items-center">
+      <div className="w-[96%] pb-4 h-full text-2xl font-semibold text-black flex justify-center items-center">
         No Bets Yet....
       </div>
     );
   }
+
   return (
     <div className="w-[96%] pb-4 h-full flex flex-col scroller">
       {BetList.map((bet, index) => {
@@ -52,6 +60,7 @@ const LoseList = () => {
           senderFinalResp,
           receiverFinalResp,
         } = bet;
+
         return (
           <DetailsCard
             key={index}
@@ -71,7 +80,6 @@ const LoseList = () => {
           />
         );
       })}
-     
     </div>
   );
 };

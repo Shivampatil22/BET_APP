@@ -22,7 +22,7 @@ function App() {
             <Route path='/login' Component={Login}></Route>
             <Route path='/createBet' Component={CreateBet}></Route>
             <Route path='/home' Component={Home}>
-              <Route path='/home' Component={CardList}></Route>
+              <Route path='/home/open' Component={CardList}></Route>
               <Route path='/home/request' Component={ReqestBetList}></Route>
               <Route path='/home/wins' Component={WinList}></Route>
               <Route path='/home/lose' Component={LoseList}></Route>

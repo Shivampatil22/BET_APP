@@ -1,82 +1,85 @@
 import DetailsCard from "./DetailsCard";
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
+
 const ReqestBetList = () => {
   const [BetList, setBetList] = useState([]);
   const num = localStorage.getItem("phone");
+
+  // Function to fetch pending bet requests
   const GetRequests = async () => {
-    let list=[];
-     list = await axios.get(
-       `http://localhost:5500/api/getrequest/${num}/pending`
-     );
-    list = list.data;
-    console.log(list);
-    setBetList(list);
+    try {
+      let list = await axios.get(
+        `http://localhost:5500/api/getrequest/${num}/pending`
+      );
+      list = list.data;
+      setBetList(list);
+    } catch (error) {
+      console.error("An error occurred while fetching pending bets:", error);
+    }
   };
+
+  // Function to delete a bet request
+  const DeleteBet = async (id) => {
+    try {
+      let result = await axios.delete(
+        `http://localhost:5500/api/deletebet/${id}`
+      );
+      GetRequests(); // Refresh the bet list after deletion
+    } catch (error) {
+      console.error("An error occurred while deleting the bet:", error);
+    }
+  };
+
+  // Function to accept a bet request
+  const AcceptBet = async (id, resolDate, senderNumber, receiverNumber) => {
+    try {
+      let result = await axios.patch(
+        `http://localhost:5500/api/updatestatus/${id}`,
+        {
+          status: "open",
+        }
+      );
+      GetRequests(); // Refresh the bet list after accepting the request
+
+      // Perform scheduled tasks here
+      let msg1 = await axios.post(
+        `http://localhost:5500/api/sendresolupdate/${id}/1`,
+        {
+          resolDate: resolDate,
+          number: senderNumber,
+        }
+      );
+
+      let msg2 = await axios.post(
+        `http://localhost:5500/api/sendresolupdate/${id}/0`,
+        {
+          resolDate: resolDate,
+          number: receiverNumber,
+        }
+      );
+
+      console.log(`Scheduled message sent for: ${resolDate}`);
+    } catch (error) {
+      console.error("An error occurred while accepting the bet:", error);
+    }
+  };
+
   useEffect(() => {
     GetRequests();
   }, []);
-  
-  const DeleteBet = async (id) => {
-    let result = await axios.delete(
-      `http://localhost:5500/api/deletebet/${id}`
-    );
-    let list = await axios.get(
-      `http://localhost:5500/api/getrequest/${num}/pending`
-    );
-    list = list.data;
-    console.log(list)
-    setBetList(list);
-  };
 
-  
-
-  //import sender number from get
-  const AcceptBet = async (id, resolDate,senderNumber,receiverNumber) => {
-    let result = await axios.patch(
-      `http://localhost:5500/api/updatestatus/${id}`,
-      {
-        status: "open",
-      }
-    );
-    let list = await axios.get(
-      `http://localhost:5500/api/getrequest/${num}/pending`
-    );
-    list = list.data;
-    
-    setBetList(list);    
-    //2 tasks: 
-    //Node scheduler to change the status from open to final
-    //execute scheduled message as soon as the request is accepted.
-
-    //task 1:
-    let msg1 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}/1`,
-      {
-        resolDate: resolDate,
-        number: senderNumber
-      }
-    );
-    let msg2 = await axios.post(`http://localhost:5500/api/sendresolupdate/${id}/0`,
-      {
-        resolDate: resolDate,
-        number: receiverNumber
-      }
-    );
-    console.log(`Scheduled message sent for: ${resolDate}`);
-  };  
-
-  if (BetList.length == 0) {
+  if (BetList.length === 0) {
     return (
-      <div className="w-[96%] pb-4 h-full text-white flex justify-center items-center">
+      <div className="w-[96%] pb-4 h-full text-2xl font-semibold text-black flex justify-center items-center">
         No Bets Yet....
       </div>
     );
   }
+
   return (
     <div className="w-[96%] pb-4 h-full flex flex-col scroller">
-      {BetList.map((bet,index) => {
-       
+      {BetList.map((bet, index) => {
         const {
           senderName,
           senderResponse,
@@ -104,12 +107,13 @@ const ReqestBetList = () => {
             ResolutionDate={resolDate}
             Wager={wager}
             status={"pending"}
-            DeleteBet={DeleteBet}
-            AcceptBet={AcceptBet}
+            DeleteBet={() => DeleteBet(bet._id)}
+            AcceptBet={() =>
+              AcceptBet(bet._id, resolDate, senderNumber, receiverNumber)
+            }
             Result={"none"}
           />
         );
-        
       })}
     </div>
   );
