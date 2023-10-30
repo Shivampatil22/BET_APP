@@ -78,19 +78,19 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <div className="flex flex-col z-10 bg-[#151515] sm:rounded-lg p-5 sm:px-10 px-13 items-start sm:w-max w-full sm:h-max h-full">
-        <div className="text-slate-50 font-semibold text-[1.7rem] mt-1 flex w-full ">
+    <div className="w-full h-screen flex justify-center items-center bg-blue-100">
+      <div className="shadow-2xl flex flex-col z-10  sm:rounded-lg p-5 sm:px-10 px-13 items-start sm:w-max w-full sm:h-max h-full">
+        <div className=" font-semibold text-[1.7rem] mt-1 flex w-full ">
           Welcome to BetApp
         </div>
 
         <div className="flex flex-col ">
-          <span className="text-slate-200 font-thin my-2 text-xl mb-3">
+          <span className="text-slate-900 font-normal my-2 text-xl mb-3">
             Phone
           </span>
           <input
             type="tel"
-            className="sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium "
+            className="border border-gray-300 sm:w-72 w-64 h-10 rounded-lg outline-none px-2 py-2 font-medium "
             ref={phone}
           />
           {PhoneEmp && (
@@ -103,7 +103,7 @@ const Login = () => {
           )}
         </div>
         <div className="flex flex-col my-2">
-          <span className="text-slate-200 font-thin my-2 text-xl mb-3">
+          <span className="text-slate-900 font-normal my-2 text-xl mb-3">
             Password
           </span>
           <input
@@ -124,7 +124,7 @@ const Login = () => {
         </div>
         <div className="flex w-full items-center justify-center mt-7 mb-5">
           <button
-            className="text-xl bg-slate-50 text-slate-900 px-4 py-2 font-semibold rounded-lg w-full "
+            className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full "
             onClick={() => {
               handleRegister();
             }}
@@ -132,10 +132,10 @@ const Login = () => {
             Login
           </button>
         </div>
-        <div className="text-slate-50">
+        <div className="text-slate-900">
           Don't have an account?
           <span
-            className="font-bold cursor-pointer"
+            className="font-bold cursor-pointer ml-1"
             onClick={() => {
               sign();
             }}
