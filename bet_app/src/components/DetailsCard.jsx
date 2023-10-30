@@ -90,7 +90,7 @@ const DetailsCard = ({
       {status == "pending" && (
         <div className="flex lg:flex-col  justify-evenly h-full mx-3 ">
           <button
-            className="text-[3rem] lg:mx-0 mx-4 text-green-600"
+            className="text-[3rem] lg:mx-0 mx-4 text-green-600 active:scale-105 duration-200 "
             onClick={() => {
               AcceptBet(Betid, ResolutionDate, senderphone, receiverNumber);
             }}
@@ -98,7 +98,7 @@ const DetailsCard = ({
             <AiOutlineCheckCircle />
           </button>
           <button
-            className="text-[3rem] text-red-600"
+            className="text-[3rem] text-red-600 active:scale-105 duration-200 "
             onClick={() => {
               DeleteBet(Betid);
             }}
@@ -115,28 +115,34 @@ const DetailsCard = ({
           </div>
           <div className="flex justify-around my-3">
             <button
-              className="text-xl mx-3 bg-blue-600 text-black font-semibold py-1 px-2 rounded-md"
+              className="text-xl mx-3 bg-blue-600 text-black font-semibold py-1 px-2 rounded-md active:scale-105 duration-200 "
               onClick={() => {
                 SendRespone(
                   senderphone,
+                  receiverNumber,
                   Betid,
                   "Yes",
                   FinalsenderResp,
-                  FinalreceiverResp
+                  FinalreceiverResp,
+                  sender,
+                  receiver
                 );
               }}
             >
               YES
             </button>
             <button
-              className="text-xl bg-red-600 text-black font-semibold py-1 px-2 rounded-md"
+              className="text-xl bg-red-600 text-black font-semibold py-1 px-2 rounded-md active:scale-105 duration-200 "
               onClick={() => {
                 SendRespone(
                   senderphone,
+                  receiverNumber,
                   Betid,
                   "No",
                   FinalsenderResp,
-                  FinalreceiverResp
+                  FinalreceiverResp,
+                  sender,
+                  receiver
                 );
               }}
             >
@@ -149,9 +155,9 @@ const DetailsCard = ({
         (status == "final" && !Isender && FinalreceiverResp != "NIL")) && (
         <div className="flex h-full items-center justify-center flex-col mx-3">
           <div className="text-black font-bold text-xl">
-          Your response was {Isender?FinalsenderResp:FinalreceiverResp}
+            Your response was {Isender ? FinalsenderResp : FinalreceiverResp}
           </div>
-         </div>
+        </div>
       )}
     </div>
   );

@@ -124,7 +124,7 @@ const Login = () => {
         </div>
         <div className="flex w-full items-center justify-center mt-7 mb-5">
           <button
-            className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full "
+            className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full active:scale-105 duration-200  "
             onClick={() => {
               handleRegister();
             }}

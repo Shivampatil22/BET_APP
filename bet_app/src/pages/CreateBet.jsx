@@ -155,7 +155,9 @@ const CreateBet = () => {
     <div className="w-screen h-full flex justify-center bg-blue-100 flex-col items-center">
       <Nav username={username} />
       <div className="bg-blue-100 w-full max-w-md p-8 m-4 bg-white rounded-lg shadow-2xl">
-        <h1 className="text-center text-3xl font-semibold mb-4">Initiate Bet</h1>
+        <h1 className="text-center text-3xl font-semibold mb-4">
+          Initiate Bet
+        </h1>
         <div className="mb-4 ">
           <label
             className="block text-slate-900 text-sm font-bold mb-2 text-left"
@@ -322,7 +324,7 @@ const CreateBet = () => {
 
         <button
           onClick={initiateBet}
-          className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full"
+          className="text-xl bg-blue-500 text-slate-50 px-4 py-2 font-semibold rounded-lg w-full active:scale-105 duration-200 "
         >
           Initiate Bet
         </button>

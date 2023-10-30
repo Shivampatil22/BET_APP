@@ -44,7 +44,7 @@ const ReqestBetList = () => {
 
       // Perform scheduled tasks here
       let msg1 = await axios.post(
-        `http://localhost:5500/api/sendresolupdate/${id}/1`,
+        `http://localhost:5500/api/sendresolupdate/${id}`,
         {
           resolDate: resolDate,
           number: senderNumber,
@@ -52,7 +52,7 @@ const ReqestBetList = () => {
       );
 
       let msg2 = await axios.post(
-        `http://localhost:5500/api/sendresolupdate/${id}/0`,
+        `http://localhost:5500/api/sendresolupdate/${id}`,
         {
           resolDate: resolDate,
           number: receiverNumber,
@@ -107,10 +107,8 @@ const ReqestBetList = () => {
             ResolutionDate={resolDate}
             Wager={wager}
             status={"pending"}
-            DeleteBet={() => DeleteBet(bet._id)}
-            AcceptBet={() =>
-              AcceptBet(bet._id, resolDate, senderNumber, receiverNumber)
-            }
+            DeleteBet={DeleteBet}
+            AcceptBet={AcceptBet}
             Result={"none"}
           />
         );
