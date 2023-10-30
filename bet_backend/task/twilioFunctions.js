@@ -12,7 +12,7 @@ const sendMessage = async (req, resp) => {
         to: `+91${req.body.number}`,
         from: '+16562130651',
         messagingServiceSid: serviceId,
-        body: `Hi there is a bet being placed, please click the link below to accept/decline the request `,
+        body: `Hi ${req.body.receName} there is a bet being placed by ${req.body.sendName}, please click the link below to accept/decline the request:https://github.com/Shivampatil22/BET_APP/pull/10`,
       });
       console.log("message sent");
       // Send a response to the API
@@ -22,11 +22,6 @@ const sendMessage = async (req, resp) => {
       console.error(error);
       resp.status(500).json({ error: 'Message sending failed', details: error.message });
     }
-
-    // const check = req.params.check;
-    // if(check == '1'){
-
-    // }
 };
 
 const sendResolutionUpdate = async (req, resp) => {
@@ -62,7 +57,7 @@ const sendResolutionUpdate = async (req, resp) => {
       messagingServiceSid: serviceId,
       sendAt: new Date(Date.UTC(utcYear,utcMonth-1,utcDay,utcHours,utcMin,utcSec)),
       scheduleType: 'fixed',
-      body: `Hello, Today the resolution date has hit, please give the final responses of the outcome of the bet placed `,
+      body: `Hello, Today the resolution date has hit, please give the final responses of the outcome of the bet placed by clicking the link below: https://github.com/Shivampatil22/BET_APP/pull/10`,
     });
     
     // Send a response to the API
@@ -75,5 +70,23 @@ const sendResolutionUpdate = async (req, resp) => {
 
 };
 
-module.exports = {sendMessage, sendResolutionUpdate};
+const sendResult = async (req, resp) => {
+  try {
+    const message = await client.messages.create({
+      to: `+91${req.body.number}`,
+      from: '+16562130651',
+      messagingServiceSid: serviceId,
+      body: `Hi ${req.body.user} you are the ${req.body.result} of the bet`,
+    });
+    console.log("message sent");
+    // Send a response to the API
+    resp.status(200).json({ message: 'Message sent successfully', messageSid: message.sid });
+  } catch (error) {
+    // Handle the error if the message wasn't sent
+    console.error(error);
+    resp.status(500).json({ error: 'Message sending failed', details: error.message });
+  }
+};
+
+module.exports = {sendMessage, sendResolutionUpdate, sendResult};
 
